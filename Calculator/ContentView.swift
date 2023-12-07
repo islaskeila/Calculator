@@ -8,10 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    let grid = [
+        ["AC", "⌫", "%","/"],
+        ["7", "8", "9","x"],
+        ["4", "5", "6","-"],
+        ["1", "2", "3","+"],
+        [".", "0", "","="]
+    ]
     var body: some View {
         VStack {
             HStack {
-             Spacer ()
+                Spacer ()
                 Text ("Hello World")
                     .padding()
                     .foregroundColor(Color.white)
@@ -19,11 +26,24 @@ struct ContentView: View {
             } .frame(maxWidth: .infinity, maxHeight: .infinity)
             HStack {
                 Spacer ()
-                   Text ("Hello World")
-                       .padding()
-                       .foregroundColor(Color.white)
-                       .font(.system(size: 50, weight: .heavy))
+                Text ("Hello World")
+                    .padding()
+                    .foregroundColor(Color.white)
+                    .font(.system(size: 50, weight: .heavy))
             } .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            ForEach(grid, id: \.self) {
+                row in
+                ForEach(row, id: \.self) {
+                    cell in
+                    
+                    Button (action: {}, label: {
+                        Text("Button")
+                    })
+                }
+            }
+            
+            
         }
         .background(Color.black.ignoresSafeArea())
     }
