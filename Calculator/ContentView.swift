@@ -18,6 +18,7 @@ struct ContentView: View {
     let operators = ["/", "+", "x","%"]
     @State var buttonWork = ""
     @State var buttonResults = ""
+    @State var showAlert = false
     
     var body: some View {
         VStack {
@@ -55,6 +56,13 @@ struct ContentView: View {
             
         }
         .background(Color.black.ignoresSafeArea())
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Invalid Input"),
+                message: Text(buttonWork),
+                dismissButton: .default(Text("Okay"))
+            )
+        }
     }
     func buttonColor(_ cell: String) -> Color {
         if(cell == "AC" || cell == "⌫") {
@@ -79,8 +87,26 @@ struct ContentView: View {
             buttonWork = String(buttonWork.dropLast())
         case "=":
             buttonResults = calculateResults()
+        case "-":
+            addMinus()
+        case "x", "/", "%", "+":
+            addOperator(cell)
         default:
             buttonWork += cell
+        }
+    }
+    func addOperator(_ cell : String) {
+        if !buttonWork.isEmpty {
+            let last = String(buttonWork.last!)
+            if operators.contains(last) || last == "-" {
+                buttonWork.removeLast()
+            }
+            buttonWork += cell
+        }
+    }
+    func addMinus() {
+        if buttonWork.isEmpty || buttonWork.last! != "-" {
+            buttonWork += "-"
         }
     }
     func calculateResults() -> String {
@@ -91,10 +117,11 @@ struct ContentView: View {
             let result = expression.expressionValue(with: nil, context: nil) as! Double
             return formatResult(val: result)
         }
+        showAlert = true
         return ""
     }
     func validInput() -> Bool {
-        if(buttonResults.isEmpty) {
+        if(buttonWork.isEmpty) {
             return false
         }
         let last = String (buttonWork.last!)
