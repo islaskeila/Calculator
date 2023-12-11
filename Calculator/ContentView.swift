@@ -16,18 +16,21 @@ struct ContentView: View {
         [".", "0", "☼","="]
     ]
     let operators = ["/", "+", "x","%"]
+    @State var buttonWork = ""
+    @State var buttonResults = ""
+    
     var body: some View {
         VStack {
             HStack {
                 Spacer ()
-                Text ("Hello World")
+                Text (buttonWork)
                     .padding()
                     .foregroundColor(Color.white)
                     .font(.system(size: 30, weight: .heavy))
             } .frame(maxWidth: .infinity, maxHeight: .infinity)
             HStack {
                 Spacer ()
-                Text ("Hello World")
+                Text (buttonResults)
                     .padding()
                     .foregroundColor(Color.white)
                     .font(.system(size: 50, weight: .heavy))
@@ -57,15 +60,56 @@ struct ContentView: View {
         if(cell == "AC" || cell == "⌫") {
             return .red
         }
-        if(cell == "-" || operators.contains(cell)) {
+        if(cell == "-" || cell == "=" || operators.contains(cell)) {
             return .orange
+        }
+        if(cell == "☼") {
+            return .yellow
         }
         
         return .white
     }
     
     func buttonPressed(cell: String) {
-        
+        switch cell {
+        case "AC" :
+            buttonWork = ""
+            buttonResults = ""
+        case "⌫":
+            buttonWork = String(buttonWork.dropLast())
+        case "=":
+            buttonResults = calculateResults()
+        default:
+            buttonWork += cell
+        }
+    }
+    func calculateResults() -> String {
+        if(validInput()) {
+            var work = buttonWork.replacingOccurrences(of: "%", with: "*0.1")
+            work = buttonWork.replacingOccurrences(of: "x", with: "*")
+            let expression = NSExpression(format: work)
+            let result = expression.expressionValue(with: nil, context: nil) as! Double
+            return formatResult(val: result)
+        }
+        return ""
+    }
+    func validInput() -> Bool {
+        if(buttonResults.isEmpty) {
+            return false
+        }
+        let last = String (buttonWork.last!)
+        if(operators.contains(last) || last == "-") {
+            if(last != "%" || buttonWork.count == 1) {
+                return false
+            }
+        }
+        return true
+    }
+    func formatResult(val : Double) -> String {
+        if (val.truncatingRemainder(dividingBy: 1) == 0) {
+            return String(format: "%.0f", val)
+        }
+        return String(format: "%.2f", val)
     }
 }
 
