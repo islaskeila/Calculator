@@ -19,6 +19,7 @@ struct ContentView: View {
     @State var buttonWork = ""
     @State var buttonResults = ""
     @State var showAlert = false
+    @State private var color = Color.white
     
     var body: some View {
         VStack {
@@ -27,14 +28,14 @@ struct ContentView: View {
                 Text (buttonWork)
                     .padding()
                     .foregroundColor(Color.white)
-                    .font(.system(size: 30, weight: .heavy))
+                    .font(Font.custom("Marker Felt", size: 40))
             } .frame(maxWidth: .infinity, maxHeight: .infinity)
             HStack {
                 Spacer ()
                 Text (buttonResults)
                     .padding()
                     .foregroundColor(Color.white)
-                    .font(.system(size: 50, weight: .heavy))
+                    .font(Font.custom("Marker Felt", size: 50))
             } .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             ForEach(grid, id: \.self) {
@@ -46,13 +47,12 @@ struct ContentView: View {
                         Button (action: {buttonPressed(cell: cell)}, label: {
                             Text(cell)
                                 .foregroundColor(buttonColor(cell))
-                                .font(.system(size: 40, weight: .heavy))
+                                .font(Font.custom("Marker Felt", size: 60))
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                         })
                     }
                 }
             }
-            
             
         }
         .background(Color.black.ignoresSafeArea())
@@ -138,6 +138,7 @@ struct ContentView: View {
         }
         return String(format: "%.2f", val)
     }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
@@ -145,3 +146,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
